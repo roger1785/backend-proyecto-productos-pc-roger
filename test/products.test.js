@@ -5,9 +5,9 @@ import app from "../app.js";
 
 import bcrypt from "bcryptjs";
 import User from "../src/models/User.js";
-import Movie from "../src/models/Movie.js";
+import Movie from "../src/models/Product.js";
 
-describe("CRUD Movies", function () {
+describe("CRUD Products", function () {
   this.timeout(5000);
 
   before(async () => {
@@ -26,20 +26,15 @@ describe("CRUD Movies", function () {
     User.create(user);
   });
 
-  //   beforeEach(async () => {
-  //     // Eliminar las peliculas antes de cada test
-  //     await Movie.deleteMany();
-  //   });
-
-  test("deberia traer un array de peliculas", async () => {
-    const response = await request(app).get("/api/movies");
+  test("deberia traer un array de productos", async () => {
+    const response = await request(app).get("/api/products");
 
     expect(response.status).to.equal(200);
     expect(response.body).to.be.an("array");
   });
 
-  test("el Admin deberia poder crear una pelicula", async () => {
-    await Movie.deleteMany();
+  test("el Admin deberia poder crear un producto", async () => {
+    await Product.deleteMany();
 
     const responseLogin = await request(app).post("/api/auth/login").send({
       email: "admin@test.com",
@@ -48,21 +43,21 @@ describe("CRUD Movies", function () {
 
     const token = responseLogin.body.token;
 
-    const movie = {
-      title: "Una pelicula",
-      genre: "Drama",
-      year: 2018,
+    const product = {
+      name: "Un producto",
+      price: 19.99,
+      stock: 2018,
       image: "https://picsum.photos/200",
       featured: false,
     };
 
     const response = await request(app)
-      .post("/api/movies")
-      .send(movie)
+      .post("/api/products")
+      .send(product)
       .set("Authorization", `Bearer ${token}`);
 
     expect(response.status).to.equal(201);
-    expect(response.body).to.have.property("title");
-    expect(response.body.title).to.equal("Una pelicula");
+    expect(response.body).to.have.property("name");
+    expect(response.body.name).to.equal("Un producto");
   });
 });
