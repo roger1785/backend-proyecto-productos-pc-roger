@@ -34,7 +34,12 @@ export const createProduct = async (req, res) => {
 
 export const getProducts = async (req, res) => {
   try {
-    const { sortBy = "name", order = "asc", search = "", description } = req.query;
+    const {
+      sortBy = "name",
+      order = "asc",
+      search = "",
+      description,
+    } = req.query;
 
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 4;
@@ -66,7 +71,14 @@ export const getProducts = async (req, res) => {
       .skip(skip)
       .limit(limit);
 
-    res.json(products);
+    const totalProducts = await Product.countDocuments();
+
+    res.json({
+      products,
+      totalProducts,
+      totalPages: Math.ceil(totalProducts / limit),
+      currentPage: page,
+    });
   } catch (error) {
     // console.log(error.message);
     res.status(500).json({ message: "Error al obtener los productos" });
