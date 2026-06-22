@@ -2,8 +2,9 @@ import Product from "../models/Product.js";
 
 export const createProduct = async (req, res) => {
   try {
+    // await new Promise((resolve) => setTimeout(resolve, 3000));
 
-    const { name, price, stock, image } = req.body;
+    const { name, description, price, stock } = req.body;
 
     if (!name || name.trim() === "" || name.length < 3) {
       return res.status(422).json({
@@ -11,7 +12,7 @@ export const createProduct = async (req, res) => {
       });
     }
 
-    if (!name || !price || !stock || !image) {
+    if (!name || !description || !price || !stock) {
       return res
         .status(422)
         .json({ message: "Todos los campos son obligatorios" });
@@ -21,7 +22,7 @@ export const createProduct = async (req, res) => {
 
     res.status(201).json(product);
   } catch (error) {
-
+    // console.log(error);
 
     if (error.name === "ValidationError") {
       return res.status(422).json({ message: error.message });
@@ -33,11 +34,41 @@ export const createProduct = async (req, res) => {
 
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find().select("-description -__v");
+    const { sortBy = "name", order = "asc", search = "", description } = req.query;
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 4;
+    const skip = (page - 1) * limit;
+
+    const products = await Product.find({
+      $and: [
+        {
+          $or: [
+            {
+              name: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              description: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+          ],
+        },
+        description ? { description } : {},
+      ],
+    })
+      .select("-description -__v")
+      .sort({ [sortBy]: order === "desc" ? -1 : 1 })
+      .skip(skip)
+      .limit(limit);
 
     res.json(products);
   } catch (error) {
-
+    // console.log(error.message);
     res.status(500).json({ message: "Error al obtener los productos" });
   }
 };
@@ -54,14 +85,14 @@ export const getProductById = async (req, res) => {
 
     res.json(product);
   } catch (error) {
-
+    // console.log(error.message);
     res.status(500).json({ message: "Error al obtener el producto" });
   }
 };
 
 export const updateProduct = async (req, res) => {
   try {
-
+    // await new Promise((resolve) => setTimeout(resolve, 3000));
 
     const { id } = req.params;
 
@@ -78,7 +109,7 @@ export const updateProduct = async (req, res) => {
 
     res.json(product);
   } catch (error) {
-
+    // console.log(error);
 
     if (error.name === "ValidationError") {
       return res.status(422).json({ message: error.message });
