@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Category from "./Category.js";
 
 const ProductSchema = new mongoose.Schema(
   {
@@ -8,6 +9,12 @@ const ProductSchema = new mongoose.Schema(
       trim: true,
       minlength: [3, "El nombre debe tener al menos 3 caracteres"],
     },
+    category: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
+
     description: {
       type: String,
       trim: true,

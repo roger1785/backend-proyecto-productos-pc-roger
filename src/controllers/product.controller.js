@@ -1,4 +1,5 @@
 import Product from "../models/Product.js";
+import Category from "../models/Category.js";
 
 export const createProduct = async (req, res) => {
   try {
@@ -31,6 +32,28 @@ export const createProduct = async (req, res) => {
     res.status(500).json({ message: "Error al crear el producto" });
   }
 };
+
+export const getCategoryProducts = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const categoryExists = await Category.findById(category);
+
+    if (!categoryExists) {
+      return res.status(404).json({ message: "Categoría no encontrada" });
+    }
+
+    const products = await Product.find({ category }).select(
+      "-description -__v",
+    );
+    res.json(products);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error al obtener los productos por categoría" });
+  }
+};
+
+
 
 export const getProducts = async (req, res) => {
   try {

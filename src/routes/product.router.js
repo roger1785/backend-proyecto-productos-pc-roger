@@ -10,6 +10,7 @@ import {
 
 import { authMiddleware } from "../middlewares/auth.middleware.js";
 import { adminMiddleware } from "../middlewares/admin.middleware.js";
+import { getCategoryProducts,  } from "../controllers/product.controller.js";
 
 const router = Router();
 
@@ -18,6 +19,7 @@ const router = Router();
 router.post("/", authMiddleware, adminMiddleware, createProduct);
 
 router.get("/", getProducts);
+router.get("/category/:category", getCategoryProducts);
 router.get("/:id", getProductById);
 
 router.put("/:id", authMiddleware, adminMiddleware, updateProduct);
