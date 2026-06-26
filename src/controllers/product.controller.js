@@ -160,7 +160,7 @@ export const updateProduct = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
   try {
-    await new Promise((resolve) => setTimeout(resolve, 3000));
+   
 
     const { id } = req.params;
 
