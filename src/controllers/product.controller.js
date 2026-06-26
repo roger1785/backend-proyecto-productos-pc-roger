@@ -3,7 +3,7 @@ import Category from "../models/Category.js";
 
 export const createProduct = async (req, res) => {
   try {
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
+
 
     const { name, description, price, stock } = req.body;
 
@@ -23,7 +23,7 @@ export const createProduct = async (req, res) => {
 
     res.status(201).json(product);
   } catch (error) {
-    // console.log(error);
+  
 
     if (error.name === "ValidationError") {
       return res.status(422).json({ message: error.message });
@@ -103,7 +103,7 @@ export const getProducts = async (req, res) => {
       currentPage: page,
     });
   } catch (error) {
-    // console.log(error.message);
+    
     res.status(500).json({ message: "Error al obtener los productos" });
   }
 };
@@ -120,14 +120,14 @@ export const getProductById = async (req, res) => {
 
     res.json(product);
   } catch (error) {
-    // console.log(error.message);
+    
     res.status(500).json({ message: "Error al obtener el producto" });
   }
 };
 
 export const updateProduct = async (req, res) => {
   try {
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
+  
 
     const { id } = req.params;
 
@@ -144,7 +144,7 @@ export const updateProduct = async (req, res) => {
 
     res.json(product);
   } catch (error) {
-    // console.log(error);
+  
 
     if (error.name === "ValidationError") {
       return res.status(422).json({ message: error.message });
