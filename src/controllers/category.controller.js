@@ -77,7 +77,7 @@ export const getCategories = async (req, res) => {
       currentPage: page,
     });
   } catch (error) {
-    // console.log(error.message);
+
     res.status(500).json({ message: "Error al obtener las categorías" });
   }
 };
@@ -100,7 +100,7 @@ export const getCategoryById = async (req, res) => {
 
 export const updateCategory = async (req, res) => {
   try {
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
+
 
     const { id } = req.params;
 
